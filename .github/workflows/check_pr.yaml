@@ -1,0 +1,25 @@
+name: General new PR check
+
+on:
+  workflow_call:
+    inputs:
+      prefix:
+        description: 'Branch prefix to match (e.g. "AIUTA")'
+        required: true
+        type: string
+    secrets:
+      token:
+        required: true
+
+jobs:
+  add-related-issue-to-pr-description:
+    uses: ./.github/workflows/check_pr_linked_issue.yaml
+    with:
+      prefix: ${{ inputs.prefix }}
+
+  copy-labels:
+    uses: ./.github/workflows/check_pr_labels.yaml
+    needs: add-related-issue-to-pr-description
+    secrets:
+      token: ${{ secrets.token }}
+
