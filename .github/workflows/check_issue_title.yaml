@@ -27,7 +27,7 @@ jobs:
       - name: Re-format issue title
         uses: actions/github-script@v7
         env:
-          PREFIX: ${{ inputs.prefix || env.BRANCH_PREFIX }}
+          PREFIX: ${{ inputs.prefix || 'AIUTA-DEV' }}
         with:
           script: |
             const issue = context.payload.issue;

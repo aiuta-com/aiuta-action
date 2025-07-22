@@ -15,7 +15,7 @@ jobs:
   add-related-issue-to-pr-description:
     runs-on: ubuntu-latest
     env:
-      PREFIX: ${{ inputs.prefix || env.BRANCH_PREFIX }}
+      PREFIX: ${{ inputs.prefix || 'AIUTA-DEV' }}
     steps:
       - name: Extract issue number from branch and update PR description
         uses: actions/github-script@v7
