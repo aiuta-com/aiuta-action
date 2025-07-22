@@ -29,7 +29,7 @@ jobs:
             const match = branch.match(regex);
             if (match) {
               const issueNumber = match[1];
-              const relatedLine = `Related to issue #${issueNumber}`;
+              const relatedLine = `Resolve #${issueNumber}`;
               let body = pr.body || '';
               // Only add if not already present
               if (!body.includes(relatedLine)) {
