@@ -8,6 +8,7 @@ on:
 
 jobs:
   copy-labels:
+    name: Copy labels from linked issues
     runs-on: ubuntu-latest
     name: Copy labels from linked issues
     steps:

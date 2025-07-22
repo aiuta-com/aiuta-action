@@ -13,6 +13,7 @@ permissions:
 
 jobs:
   add-related-issue-to-pr-description:
+    name: Add related issue to PR description
     runs-on: ubuntu-latest
     env:
       PREFIX: ${{ inputs.prefix || 'AIUTA-DEV' }}

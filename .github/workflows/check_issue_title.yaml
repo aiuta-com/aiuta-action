@@ -16,6 +16,7 @@ permissions:
 
 jobs:
   enforce-title-pattern:
+    name: Enforce title pattern
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
