@@ -1,0 +1,73 @@
+name: Format new issue titles
+
+on:
+  workflow_call:
+    inputs:
+      next-version:
+        required: true
+        type: string
+      title-prefix:
+        required: true
+        type: string
+        default: "AIUTA"
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  enforce-title-pattern:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: ${{ env.USED_LFS }}
+          fetch-depth: 0
+
+      - name: Re-format issue title
+        uses: actions/github-script@v7
+        env:
+          TITLE_PREFIX: ${{ inputs.title-prefix }}
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const num   = issue.number;
+            // strip any existing “${process.env.TITLE_PREFIX}-<num>: ” prefix
+            const clean = issue.title.replace(/^${process.env.TITLE_PREFIX}-\d+:\s*/, '');
+            const newTitle = `${process.env.TITLE_PREFIX}-${num}: ${clean}`;
+            
+            // only update if it isn’t already correct
+            if (issue.title !== newTitle) {
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo:  context.repo.repo,
+                issue_number: num,
+                title: newTitle
+              });
+            }
+      - name: Set issue milestone
+        uses: actions/github-script@v7
+        env:
+          NEXT_RELEASE_VERSION: ${{ inputs.next-version }}
+        with:
+          script: |
+            const issue = context.payload.issue;
+            if (!issue.milestone) {
+              const nextVersion = process.env.NEXT_RELEASE_VERSION;
+              // fetch all milestones to find matching title
+              const { data: milestones } = await github.rest.issues.listMilestones({
+                owner: context.repo.owner,
+                repo:  context.repo.repo,
+                state: 'all'
+              });
+              const milestone = milestones.find(m => m.title === nextVersion);
+              if (milestone) {
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo:  context.repo.repo,
+                  issue_number: issue.number,
+                  milestone: milestone.number
+                });
+              }
+            }
