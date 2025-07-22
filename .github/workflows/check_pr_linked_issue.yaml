@@ -8,11 +8,12 @@ on:
         required: true
         type: string
 
+permissions:
+  pull-requests: write
+
 jobs:
   add-related-issue-to-pr-description:
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
     steps:
       - name: Extract issue number from branch and update PR description
         uses: actions/github-script@v7
