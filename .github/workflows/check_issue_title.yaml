@@ -6,10 +6,9 @@ on:
       next-version:
         required: true
         type: string
-      title-prefix:
-        required: true
+      prefix:
+        required: false
         type: string
-        default: "AIUTA"
 
 permissions:
   contents: read
@@ -28,14 +27,14 @@ jobs:
       - name: Re-format issue title
         uses: actions/github-script@v7
         env:
-          TITLE_PREFIX: ${{ inputs.title-prefix }}
+          PREFIX: ${{ inputs.prefix || env.BRANCH_PREFIX }}
         with:
           script: |
             const issue = context.payload.issue;
             const num   = issue.number;
-            // strip any existing “${process.env.TITLE_PREFIX}-<num>: ” prefix
-            const clean = issue.title.replace(/^${process.env.TITLE_PREFIX}-\d+:\s*/, '');
-            const newTitle = `${process.env.TITLE_PREFIX}-${num}: ${clean}`;
+            // strip any existing “${process.env.PREFIX}-<num>: ” prefix
+            const clean = issue.title.replace(/^${process.env.PREFIX}-\d+:\s*/, '');
+            const newTitle = `${process.env.PREFIX}-${num}: ${clean}`;
             
             // only update if it isn’t already correct
             if (issue.title !== newTitle) {

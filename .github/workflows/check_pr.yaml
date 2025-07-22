@@ -2,8 +2,8 @@ on:
   workflow_call:
     inputs:
       prefix:
-        description: 'Branch prefix to match (e.g. "AIUTA")'
-        required: true
+        description: 'Branch prefix to match (e.g. "AIUTA-DEV")'
+        required: false
         type: string
     secrets:
       token:
@@ -16,7 +16,7 @@ jobs:
   add-related-issue-to-pr-description:
     uses: ./.github/workflows/check_pr_linked_issue.yaml
     with:
-      prefix: ${{ inputs.prefix }}
+      prefix: ${{ inputs.prefix || env.BRANCH_PREFIX }}
 
   copy-labels:
     uses: ./.github/workflows/check_pr_labels.yaml

@@ -4,8 +4,8 @@ on:
   workflow_call:
     inputs:
       prefix:
-        description: 'Branch prefix to match (e.g. "AIUTA")'
-        required: true
+        description: 'Branch prefix to match (e.g. "AIUTA-DEV")'
+        required: false
         type: string
 
 permissions:
@@ -14,6 +14,8 @@ permissions:
 jobs:
   add-related-issue-to-pr-description:
     runs-on: ubuntu-latest
+    env:
+      PREFIX: ${{ inputs.prefix || env.BRANCH_PREFIX }}
     steps:
       - name: Extract issue number from branch and update PR description
         uses: actions/github-script@v7
@@ -21,7 +23,7 @@ jobs:
           script: |
             const pr = context.payload.pull_request;
             const branch = pr.head.ref;
-            const prefix = "${{ inputs.prefix }}";
+            const prefix = "${{ env.PREFIX }}";
             // Match pattern: <prefix>-<number>/<rest>
             // Escape prefix for regex
             const escPrefix = prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
