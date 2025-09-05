@@ -26,7 +26,7 @@ jobs:
           fetch-depth: 0
 
       - name: Re-format issue title
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         env:
           PREFIX: ${{ inputs.prefix || 'AIUTA-DEV' }}
         with:
@@ -47,7 +47,7 @@ jobs:
               });
             }
       - name: Set issue milestone
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         env:
           NEXT_RELEASE_VERSION: ${{ inputs.next-version }}
         with:
